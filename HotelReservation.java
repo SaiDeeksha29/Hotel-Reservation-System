@@ -71,7 +71,7 @@ public class HotelReservation {
 
 		long weekends = noOfDays - weekdays;
 		setTotalRateForHotels(weekdays, weekends, customerType);
-		List<Hotel> bestRatedHotelList = hotelList.stream().sorted(Comparator.comparing(Hotel::getRating).reversed())
+		List<Hotel> bestRatedHotelList = hotelList.stream().sorted(Comparator.comparing(Hotel::getTotalRate))
 				.collect(Collectors.toList());
 
 		Hotel cheapestHotel = bestRatedHotelList.get(0);
