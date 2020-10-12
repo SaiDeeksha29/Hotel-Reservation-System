@@ -5,6 +5,24 @@ public class Hotel {
 	private String hotelName;
 	private int rateForWeekdaysRegularCustomer;
 	private int rateForWeekendsRegularCustomer;
+	private int rateForWeekdaysRewardsCustomer;
+	public int getRateForWeekdaysRewardsCustomer() {
+		return rateForWeekdaysRewardsCustomer;
+	}
+
+	public void setRateForWeekdaysRewardsCustomer(int rateForWeekdaysRewardsCustomer) {
+		this.rateForWeekdaysRewardsCustomer = rateForWeekdaysRewardsCustomer;
+	}
+
+	public int getRateForWeekendsRewardsCustomer() {
+		return rateForWeekendsRewardsCustomer;
+	}
+
+	public void setRateForWeekendsRewardsCustomer(int rateForWeekendsRewardsCustomer) {
+		this.rateForWeekendsRewardsCustomer = rateForWeekendsRewardsCustomer;
+	}
+
+	private int rateForWeekendsRewardsCustomer;
 	private int rating;
 	private long totalRate;
 	
