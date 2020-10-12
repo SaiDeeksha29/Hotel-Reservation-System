@@ -31,10 +31,10 @@ public class HotelReservation {
 
 	public static void setTotalRateForHotels(long noOfWeekdays, long noOfWeekends, Customer customer) {
 		try {
-			if (customer.getCustomerType().equals("reward")) {
+			if (customer.getCustomerType().equals("regular")) {
 				for (Hotel hotel : hotelList) {
-					long totalRate = noOfWeekdays * hotel.getRateForWeekdaysRewardsCustomer()
-							+ noOfWeekends * hotel.getRateForWeekendsRewardsCustomer();
+					long totalRate = noOfWeekdays * hotel.getRateForWeekdaysRegularCustomer()
+							+ noOfWeekends * hotel.getRateForWeekendsRegularCustomer();
 					hotel.setTotalRate(totalRate);
 				}
 			}
@@ -44,7 +44,7 @@ public class HotelReservation {
 		}
 	}
 
-	// Best hotel with cheap costs for Reward customer
+	// Best hotel with cheap costs for Regular customers
 	public Hotel cheapestBestRatedHotel(String start, String end, Customer customerType) {
 		Date StartDate = null;
 		Date EndDate = null;
@@ -104,10 +104,11 @@ public class HotelReservation {
 		String start = sc.next();
 		System.out.println("Enter the end date in ddMMMYYYY format");
 		String end = sc.next();
-		System.out.println("Enter 1 if you are a reward customer");
+		System.out.println("Enter 1 if you are a regular customer");
 		int choice = sc.nextInt();
-		if (choice == 1) 
-			customer.setCustomerType("reward");
+		if (choice == 1) {
+			customer.setCustomerType("regular");
+		}
 		Hotel cheapHotel = hotelReservation.cheapestBestRatedHotel(start, end, customer);
 		System.out.println(cheapHotel.getHotelName() + "'s has rating of " + cheapHotel.getRating()
 				+ " and total rate is " + cheapHotel.getTotalRate());
