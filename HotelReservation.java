@@ -1,16 +1,25 @@
 package com.blz.training.controller;
 
 import java.util.*;
+import java.util.regex.*;
 import java.util.stream.Collectors;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.format.*;
 
+@FunctionalInterface
+interface Validate {
+	public boolean validateDetails(String Details);
+}
+
 public class HotelReservation {
 
 	private static List<Hotel> hotelList = new ArrayList<Hotel>();
 
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMYYYY");
+
+	// Add requirement details of customers
 	public boolean addHotelCustomers(String hotelName, int rateForWeekdaysRegularCustomer,
 			int rateForWeekendsRegularCustomer, int rating, int rateForWeekdaysRewardsCustomer,
 			int rateForWeekendsRewardsCustomer) {
@@ -22,13 +31,7 @@ public class HotelReservation {
 
 	public static void setTotalRateForHotels(long noOfWeekdays, long noOfWeekends, Customer customer) {
 		try {
-			if (customer.getCustomerType().equals("regular")) {
-				for (Hotel hotel : hotelList) {
-					long totalRate = noOfWeekdays * hotel.getRateForWeekdaysRegularCustomer()
-							+ noOfWeekends * hotel.getRateForWeekendsRegularCustomer();
-					hotel.setTotalRate(totalRate);
-				}
-			} else if (customer.getCustomerType().equals("reward")) {
+			if (customer.getCustomerType().equals("reward")) {
 				for (Hotel hotel : hotelList) {
 					long totalRate = noOfWeekdays * hotel.getRateForWeekdaysRewardsCustomer()
 							+ noOfWeekends * hotel.getRateForWeekendsRewardsCustomer();
@@ -41,6 +44,7 @@ public class HotelReservation {
 		}
 	}
 
+	// Best hotel with cheap costs for Reward customer
 	public Hotel cheapestBestRatedHotel(String start, String end, Customer customerType) {
 		Date StartDate = null;
 		Date EndDate = null;
@@ -100,11 +104,9 @@ public class HotelReservation {
 		String start = sc.next();
 		System.out.println("Enter the end date in ddMMMYYYY format");
 		String end = sc.next();
-		System.out.println("Enter 1 if you are a regular customer \nEnter 2 if you are reward customer");
+		System.out.println("Enter 1 if you are a reward customer");
 		int choice = sc.nextInt();
-		if (choice == 1) {
-			customer.setCustomerType("regular");
-		} else
+		if (choice == 1) 
 			customer.setCustomerType("reward");
 		Hotel cheapHotel = hotelReservation.cheapestBestRatedHotel(start, end, customer);
 		System.out.println(cheapHotel.getHotelName() + "'s has rating of " + cheapHotel.getRating()
