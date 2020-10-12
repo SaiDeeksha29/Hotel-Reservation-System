@@ -3,8 +3,8 @@ package com.blz.training.controller;
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.format.*;
-
 public class HotelReservation {
 
 	private List<Hotel> hotelList = new ArrayList<Hotel>();
@@ -15,21 +15,41 @@ public class HotelReservation {
 		return true;
 	}
 	
-	public Hotel cheapestHotel(String dateStart,String dateEnd) {
-		Date startDate = null;
-		Date endDate = null;
-		try {
-			startDate=new SimpleDateFormat("ddMMMYYYY").parse(dateStart);
-			endDate=new SimpleDateFormat("ddMMMYYYY").parse(dateEnd);
+	public Hotel cheapestHotel(String start,String end) {
+		Date StartDate=null;
+		Date EndDate=null;
+		 try {
+			 StartDate = new SimpleDateFormat("ddMMMyyyy").parse(start);
+			 EndDate = new SimpleDateFormat("ddMMMyyyy").parse(end);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		long dateRange=2+(endDate.getTime()-startDate.getTime()) / 1000 / 60 / 60 / 24;
-		Hotel cheapHotel=hotelList.stream().sorted(Comparator.comparing(Hotel::getRateForWeekdaysRegularCustomer)).findFirst().orElse(null);
-		long totalRate=dateRange*cheapHotel.getRateForWeekdaysRegularCustomer();
-		cheapHotel.setTotalRate(totalRate);
-		return cheapHotel;
+		 long noOfDays=1+(EndDate.getTime()-StartDate.getTime())/1000/60/60/24;
+		  Calendar startCal = Calendar.getInstance();
+	      startCal.setTime(StartDate);  
+		  Calendar endCal = Calendar.getInstance();
+	      endCal.setTime(EndDate);
+	      long weekdays = 0;
+	      if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {
+	            startCal.setTime(EndDate);
+	            endCal.setTime(StartDate);
+	            
+	        }
+	        do {
+	            if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+	                ++weekdays;
+	            }
+	            startCal.add(Calendar.DAY_OF_MONTH, 1);
+	        } while (startCal.getTimeInMillis() <= endCal.getTimeInMillis()); 
+	        
+	       long weekends = noOfDays - weekdays;
+	        
+	       for(Hotel hotel: hotelList) {
+	        	long totalRate = weekdays*hotel.getRateForWeekdaysRegularCustomer()+weekends*hotel.getRateForWeekendsRegularCustomer();
+	        	hotel.setTotalRate(totalRate);
+	        }
+		 Hotel cheapestHotel = hotelList.stream().sorted(Comparator.comparing(Hotel::getTotalRate)).findFirst().orElse(null);
+		 return cheapestHotel; 
 	}
 
 	public static void main(String[] args) {
